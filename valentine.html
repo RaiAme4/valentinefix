@@ -81,7 +81,6 @@ button{
     color:#ff4d88;
 }
 
-/* GRID */
 .gallery{
     display:grid;
     grid-template-columns: 160px 160px 160px;
@@ -119,7 +118,6 @@ button{
     box-shadow:0 0 25px #ff4d88;
 }
 
-/* tombol next */
 #nextBtn{
     position:fixed;
     bottom:30px;
@@ -134,8 +132,8 @@ button{
     display:none;
 }
 
-/* GIF */
-#gifContainer{
+/* VIDEO OVERLAY */
+#videoContainer{
     display:none;
     position:fixed;
     top:0;
@@ -147,7 +145,7 @@ button{
     align-items:center;
 }
 
-#gifContainer img{
+#videoContainer video{
     width:60%;
     border-radius:20px;
 }
@@ -188,9 +186,10 @@ button{
 
 <button id="nextBtn" onclick="goNext()">Selanjutnya ➜</button>
 
-<div id="gifContainer">
-    <div id="closeBtn" onclick="closeGif()">❌</div>
-    <img id="gifPlayer">
+<!-- VIDEO -->
+<div id="videoContainer">
+    <div id="closeBtn" onclick="closeVideo()">❌</div>
+    <video id="videoPlayer" autoplay loop></video>
 </div>
 
 <!-- AUDIO -->
@@ -199,7 +198,7 @@ button{
 
 <script>
 
-/* ===== NO BUTTON LARI ===== */
+/* NO BUTTON LARI */
 const noBtn = document.getElementById("noBtn");
 
 noBtn.addEventListener("mouseover", function(){
@@ -211,23 +210,22 @@ noBtn.addEventListener("mouseover", function(){
     noBtn.style.top = y + "px";
 });
 
-/* ===== SOUND CLICK FUNCTION ===== */
+/* SOUND CLICK */
 function playClick(){
     const sound = document.getElementById("clickSound");
     sound.currentTime = 0;
     sound.play();
 }
 
-/* ===== PINDAH KE HALAMAN UTAMA ===== */
+/* PINDAH KE MAIN */
 function goToMain(){
     document.getElementById("startPage").style.display="none";
     document.getElementById("wrapper").style.display="block";
     document.body.style.overflow="auto";
-
     document.getElementById("bgMusic").play();
 }
 
-/* ===== GALLERY ===== */
+/* GALLERY */
 let selectedChoice = null;
 
 function selectImage(number){
@@ -254,29 +252,36 @@ function selectImage(number){
     document.getElementById("nextBtn").style.display="block";
 }
 
-/* ===== GIF ===== */
+/* VIDEO */
 function goNext(){
 
     playClick();
 
     if(selectedChoice == null) return;
 
-    const gif = document.getElementById("gifPlayer");
-    const container = document.getElementById("gifContainer");
+    const video = document.getElementById("videoPlayer");
+    const container = document.getElementById("videoContainer");
 
     container.style.display="flex";
-    gif.src = "gif" + selectedChoice + ".gif";
+    video.src = "video" + selectedChoice + ".mp4";
+    video.play();
 }
 
-function closeGif(){
+function closeVideo(){
 
     playClick();
 
-    document.getElementById("gifContainer").style.display="none";
-    document.getElementById("gifPlayer").src="";
+    const container = document.getElementById("videoContainer");
+    const video = document.getElementById("videoPlayer");
+
+    container.style.display="none";
+    video.pause();
+    video.currentTime = 0;
+    video.src = "";
 }
 
 </script>
 
 </body>
 </html>
+
