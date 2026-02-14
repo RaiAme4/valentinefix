@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Valentine 💖</title> 
+
+<style>
+body{
+    margin:0;
+    font-family:'Segoe UI', sans-serif;
+    background: linear-gradient(135deg,#ffd6e7,#ffeef5);
+    overflow:hidden;
+}
+
+/* ===================== */
+/* HALAMAN YES / NO */
+/* ===================== */
+
+#startPage{
+    position:fixed;
+    width:100%;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+#startPage h1{
+    color:#ff4d88;
+    margin-bottom:30px;
+}
+
+.btnContainer{
+    display:flex;
+    gap:30px;
+    position:relative;
+}
+
+button{
+    padding:15px 30px;
+    font-size:18px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+#yesBtn{
+    background:#ff4d88;
+    color:white;
+}
+
+#yesBtn:hover{
+    transform:scale(1.1);
+}
+
+#noBtn{
+    background:#999;
+    color:white;
+    position:relative;
+}
+
+/* ===================== */
+/* HALAMAN UTAMA */
+/* ===================== */
+
+#wrapper{
+    display:none;
+    width:650px;
+    margin:60px auto;
+    padding:40px;
+    border-radius:25px;
+    background: rgba(255,255,255,0.5);
+    backdrop-filter: blur(15px);
+    box-shadow:0 20px 40px rgba(255,105,180,0.2);
+    text-align:center;
+}
+
+#wrapper h1{
+    color:#ff4d88;
+}
+
+/* GRID */
+.gallery{
+    display:grid;
+    grid-template-columns: 160px 160px 160px;
+    grid-template-rows: 160px 160px;
+    gap:20px;
+    justify-content:center;
+    align-items:center;
+    margin-top:40px;
+}
+
+.img1{ grid-column:1; grid-row:1; }
+.img2{ grid-column:1; grid-row:2; }
+.img3{ grid-column:3; grid-row:1; }
+.img4{ grid-column:3; grid-row:2; }
+.img5{ 
+    grid-column:2; 
+    grid-row:1 / span 2;
+    align-self:center;
+}
+
+.gallery img{
+    width:160px;
+    height:160px;
+    border-radius:20px;
+    cursor:pointer;
+    object-fit:cover;
+    transition:0.4s;
+}
+
+.gallery img:hover{
+    transform:scale(1.05);
+}
+
+.selected{
+    box-shadow:0 0 25px #ff4d88;
+}
+
+/* tombol next */
+#nextBtn{
+    position:fixed;
+    bottom:30px;
+    right:30px;
+    padding:14px 22px;
+    background:#ff4d88;
+    color:white;
+    border:none;
+    border-radius:12px;
+    font-size:16px;
+    cursor:pointer;
+    display:none;
+}
+
+/* GIF */
+#gifContainer{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.9);
+    justify-content:center;
+    align-items:center;
+}
+
+#gifContainer img{
+    width:60%;
+    border-radius:20px;
+}
+
+#closeBtn{
+    position:absolute;
+    top:20px;
+    left:20px;
+    font-size:30px;
+    color:white;
+    cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<!-- START PAGE -->
+<div id="startPage">
+    <h1>Will You Be My Valentine? 💖</h1>
+    <div class="btnContainer">
+        <button id="yesBtn" onclick="goToMain()">YES 💘</button>
+        <button id="noBtn">NO 😝</button>
+    </div>
+</div>
+
+<!-- MAIN PAGE -->
+<div id="wrapper">
+<h1>Choose Our Couple Outfit 💑</h1>
+
+<div class="gallery">
+    <img src="img1.jpeg" class="img1" onclick="selectImage(1)">
+    <img src="img2.jpeg" class="img2" onclick="selectImage(2)">
+    <img src="img3.jpeg" class="img3" onclick="selectImage(3)">
+    <img src="img4.jpeg" class="img4" onclick="selectImage(4)">
+    <img src="placeholder.jpeg" class="img5" id="centerImage">
+</div>
+</div>
+
+<button id="nextBtn" onclick="goNext()">Selanjutnya ➜</button>
+
+<div id="gifContainer">
+    <div id="closeBtn" onclick="closeGif()">❌</div>
+    <img id="gifPlayer">
+</div>
+
+<!-- AUDIO -->
+<audio id="bgMusic" src="valentine1.mp3" loop></audio>
+<audio id="clickSound" src="valentine2.mp3"></audio>
+
+<script>
+
+/* ===== NO BUTTON LARI ===== */
+const noBtn = document.getElementById("noBtn");
+
+noBtn.addEventListener("mouseover", function(){
+    const x = Math.random() * (window.innerWidth - 100);
+    const y = Math.random() * (window.innerHeight - 50);
+
+    noBtn.style.position = "fixed";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+});
+
+/* ===== SOUND CLICK FUNCTION ===== */
+function playClick(){
+    const sound = document.getElementById("clickSound");
+    sound.currentTime = 0;
+    sound.play();
+}
+
+/* ===== PINDAH KE HALAMAN UTAMA ===== */
+function goToMain(){
+    document.getElementById("startPage").style.display="none";
+    document.getElementById("wrapper").style.display="block";
+    document.body.style.overflow="auto";
+
+    document.getElementById("bgMusic").play();
+}
+
+/* ===== GALLERY ===== */
+let selectedChoice = null;
+
+function selectImage(number){
+
+    playClick();
+
+    selectedChoice = number;
+
+    document.querySelectorAll(".gallery img").forEach(img=>{
+        img.classList.remove("selected");
+    });
+
+    event.target.classList.add("selected");
+
+    const center = document.getElementById("centerImage");
+
+    center.style.opacity = 0;
+
+    setTimeout(()=>{
+        center.src = "img" + number + ".jpeg";
+        center.style.opacity = 1;
+    },200);
+
+    document.getElementById("nextBtn").style.display="block";
+}
+
+/* ===== GIF ===== */
+function goNext(){
+
+    playClick();
+
+    if(selectedChoice == null) return;
+
+    const gif = document.getElementById("gifPlayer");
+    const container = document.getElementById("gifContainer");
+
+    container.style.display="flex";
+    gif.src = "gif" + selectedChoice + ".gif";
+}
+
+function closeGif(){
+
+    playClick();
+
+    document.getElementById("gifContainer").style.display="none";
+    document.getElementById("gifPlayer").src="";
+}
+
+</script>
+
+</body>
+</html>
